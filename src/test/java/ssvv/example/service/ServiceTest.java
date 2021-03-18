@@ -26,10 +26,12 @@ public class ServiceTest {
     }
 
     @Test
-    public void addStudentValid() {
-        Student student = new Student("1", "Raul Mogos", 935, "raul@raul.com");
+    public void addStudentValidGroup() {
+        Student student = new Student("2", "Raul Mogos", 935, "raul@raul.com");
         studentValidator.validate(student);
+        assertTrue(true);
         studentFileRepository.save(student);
+        assertTrue(true);
     }
 
     @Test
@@ -45,7 +47,16 @@ public class ServiceTest {
     }
 
     @Test
-    public void addStudentInvalidId() {
+    public void addStudentValidId() {
+        Student student = new Student("1", "Raul Mogos", 935, "raul@raul.com");
+        studentValidator.validate(student);
+        assertTrue(true);
+        studentFileRepository.save(student);
+        assertTrue(true);
+    }
+
+    @Test
+    public void addStudentInvalidIdEmpty() {
         Student student = new Student("", "Raul Mogos", 935, "raul@raul.com");
         try {
             studentValidator.validate(student);
@@ -54,6 +65,74 @@ public class ServiceTest {
         } catch (ValidationException e) {
             assertTrue(true);
             assert "Id incorect!" == e.getMessage();
+        }
+    }
+
+    @Test
+    public void addStudentInvalidIdNotANumber() {
+        Student student = new Student("wed", "Raul Mogos", 935, "raul@raul.com");
+        try {
+            studentValidator.validate(student);
+            assertTrue(false);
+            studentFileRepository.save(student);
+        } catch (ValidationException e) {
+            assertTrue(true);
+            assert "Id incorect!" == e.getMessage();
+        }
+    }
+
+    @Test
+    public void addStudentInvalidIdNegative() {
+        Student student = new Student("-4", "Raul Mogos", 935, "raul@raul.com");
+        try {
+            studentValidator.validate(student);
+            assertTrue(false);
+            studentFileRepository.save(student);
+        } catch (ValidationException e) {
+            assertTrue(true);
+            assert "Id incorect!" == e.getMessage();
+        }
+    }
+
+    @Test
+    public void addStudentValidName() {
+        Student student = new Student("3", "Raul Mogos", 935, "raul@raul.com");
+        studentValidator.validate(student);
+        assertTrue(true);
+        studentFileRepository.save(student);
+        assertTrue(true);
+    }
+
+    @Test
+    public void addStudentInvalidName() {
+        Student student = new Student("3", "", 935, "raul@raul.com");
+        try {
+            studentValidator.validate(student);
+            assertTrue(false);
+            studentFileRepository.save(student);
+        } catch (ValidationException e) {
+            assertTrue(true);
+        }
+    }
+
+    @Test
+    public void addStudentValidEmail() {
+        Student student = new Student("4", "Raul Mogos", 935, "raul@raul.com");
+        studentValidator.validate(student);
+        assertTrue(true);
+        studentFileRepository.save(student);
+        assertTrue(true);
+    }
+
+    @Test
+    public void addStudentInvalidEmail() {
+        Student student = new Student("4", "Raul Mogos", 935, "");
+        try {
+            studentValidator.validate(student);
+            assertTrue(false);
+            studentFileRepository.save(student);
+        } catch (ValidationException e) {
+            assertTrue(true);
         }
     }
 }
