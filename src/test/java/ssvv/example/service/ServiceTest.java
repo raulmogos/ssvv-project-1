@@ -4,8 +4,11 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import ssvv.example.domain.Student;
+import ssvv.example.domain.Tema;
 import ssvv.example.repository.StudentFileRepository;
+import ssvv.example.repository.TemaXMLRepo;
 import ssvv.example.validation.StudentValidator;
+import ssvv.example.validation.TemaValidator;
 import ssvv.example.validation.ValidationException;
 
 import static org.junit.Assert.*;
@@ -15,10 +18,21 @@ public class ServiceTest {
     StudentValidator studentValidator;
     StudentFileRepository studentFileRepository;
 
+    TemaValidator temaValidator;
+    TemaXMLRepo temaFileRepository;
+
+    Service service;
+
+
     @Before
     public void setUp() throws Exception {
         studentValidator = new StudentValidator();
         studentFileRepository = new StudentFileRepository("fisiere/Studenti.txt");
+
+        temaValidator = new TemaValidator();
+        temaFileRepository = new TemaXMLRepo("fisiere/Teme.xml");
+
+        service = new Service(null, null, temaFileRepository ,temaValidator ,null, null);
     }
 
     @After
@@ -156,7 +170,7 @@ public class ServiceTest {
     }
 
     @Test
-    public void addStudentInvalidName() {
+    public void addStudentInvalidName() { // TODO: rename
         Student student = new Student("3", "", 935, "raul@raul.com");
         try {
             studentValidator.validate(student);
@@ -187,7 +201,7 @@ public class ServiceTest {
     }
 
     @Test
-    public void addStudentInvalidEmail() {
+    public void addStudentInvalidEmail() { // TODO: rename
         Student student = new Student("4", "Raul Mogos", 935, "");
         try {
             studentValidator.validate(student);
@@ -199,7 +213,7 @@ public class ServiceTest {
     }
     
     
-    // BVA
+    // BVA - boundary value analysis
     @Test
     public void addStudentBVAInvalidEmail() {
         Student student = new Student("4", "Raul Mogos", 935, "");
@@ -207,6 +221,27 @@ public class ServiceTest {
             studentValidator.validate(student);
             assertTrue(false);
             studentFileRepository.save(student);
+        } catch (ValidationException e) {
+            assertTrue(true);
+        }
+    }
+
+
+    // White Box testing
+    // assignment
+    @Test
+    public void addAssignmentValid() {
+        Tema tema = new Tema("1", "descriere", 3, 5);
+        service.addTema(tema);
+        assertTrue(true);
+    }
+
+    @Test
+    public void addAssignmentInvalidId() {
+        Tema tema = new Tema("", "descriere", 3, 5);
+        try {
+            service.addTema(tema);
+            fail();
         } catch (ValidationException e) {
             assertTrue(true);
         }
