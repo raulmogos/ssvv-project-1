@@ -27,10 +27,10 @@ public class ServiceTest {
     @Before
     public void setUp() throws Exception {
         studentValidator = new StudentValidator();
-        studentFileRepository = new StudentFileRepository("fisiere/Studenti.txt");
+        studentFileRepository = new StudentFileRepository("fisiere/StudentiTest.txt");
 
         temaValidator = new TemaValidator();
-        temaFileRepository = new TemaXMLRepo("fisiere/Teme.xml");
+        temaFileRepository = new TemaXMLRepo("fisiere/TemeTest.xml");
 
         service = new Service(null, null, temaFileRepository ,temaValidator ,null, null);
     }
@@ -244,6 +244,105 @@ public class ServiceTest {
             fail();
         } catch (ValidationException e) {
             assertTrue(true);
+        }
+    }
+
+    ////////////////////////////////////////////////////////////////////
+    // lab 3 home
+    ////////////////////////////////////////////////////////////////////
+
+    @Test
+    public void addAssignmentPath1() {
+        Tema tema = new Tema("","desc",4,6);
+        try {
+            service.addTema(tema);
+            fail();
+        } catch (ValidationException e) {
+            assertTrue(true);
+        }
+    }
+
+    @Test
+    public void addAssignmentPath2() {
+        Tema tema = new Tema("2342621","",4,6);
+        try {
+            service.addTema(tema);
+            fail();
+        } catch (ValidationException e) {
+            assertTrue(true);
+        }
+    }
+
+    @Test
+    public void addAssignmentPath3() {
+        Tema tema = new Tema("169634", "desc", -2, 10);
+        try {
+            service.addTema(tema);
+            fail();
+        } catch (ValidationException e) {
+            assertTrue(true);
+        }
+    }
+
+    @Test
+    public void addAssignmentPath3Extra() {
+        Tema tema = new Tema("234234", "desc", 17, 10);
+        try {
+            service.addTema(tema);
+            fail();
+        } catch (ValidationException e) {
+            assertTrue(true);
+        }
+    }
+
+    @Test
+    public void addAssignmentPath4() {
+        Tema tema = new Tema("12312","desc", 10,-2);
+        try {
+            service.addTema(tema);
+            fail();
+        } catch (ValidationException e) {
+            assertTrue(true);
+        }
+    }
+
+    @Test
+    public void addAssignmentPath4Extra() {
+        Tema tema = new Tema("13423","desc", 10,17);
+        try {
+            service.addTema(tema);
+            fail();
+        } catch (ValidationException e) {
+            assertTrue(true);
+        }
+    }
+
+    @Test
+    public void addAssignmentPath5() {
+        Tema tema = new Tema("1","desc",2,10);
+        try {
+            service.addTema(tema);
+            assertTrue(true);
+        } catch (ValidationException e) {
+            fail();
+        }
+    }
+
+    @Test
+    public void addAssignmentPath6() {
+        service.deleteTema("2377423");
+        Tema tema = new Tema("2377423","desc",2,10);
+        try {
+            Tema ret = service.addTema(tema);
+            assertNull(ret);
+        } catch (ValidationException e) {
+            fail();
+        }
+        try {
+            Tema ret = service.addTema(tema);
+            assertNotNull(ret);
+        } catch (ValidationException e) {
+            fail();
         }
     }
 }
