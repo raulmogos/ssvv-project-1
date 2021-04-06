@@ -3,23 +3,32 @@ package ssvv.example.service;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import ssvv.example.domain.Nota;
 import ssvv.example.domain.Student;
 import ssvv.example.domain.Tema;
+import ssvv.example.repository.NotaXMLRepo;
 import ssvv.example.repository.StudentFileRepository;
+import ssvv.example.repository.StudentXMLRepo;
 import ssvv.example.repository.TemaXMLRepo;
+import ssvv.example.validation.NotaValidator;
 import ssvv.example.validation.StudentValidator;
 import ssvv.example.validation.TemaValidator;
 import ssvv.example.validation.ValidationException;
+
+import java.time.LocalDate;
 
 import static org.junit.Assert.*;
 
 public class ServiceTest {
 
     StudentValidator studentValidator;
-    StudentFileRepository studentFileRepository;
+    StudentXMLRepo studentFileRepository;
 
     TemaValidator temaValidator;
     TemaXMLRepo temaFileRepository;
+
+    NotaValidator notaValidator;
+    NotaXMLRepo notaFileRepository;
 
     Service service;
 
@@ -27,12 +36,19 @@ public class ServiceTest {
     @Before
     public void setUp() throws Exception {
         studentValidator = new StudentValidator();
-        studentFileRepository = new StudentFileRepository("fisiere/StudentiTest.txt");
+        studentFileRepository = new StudentXMLRepo("fisiere/StudentiTest.xml");
 
         temaValidator = new TemaValidator();
         temaFileRepository = new TemaXMLRepo("fisiere/TemeTest.xml");
 
-        service = new Service(null, null, temaFileRepository ,temaValidator ,null, null);
+        notaValidator = new NotaValidator(studentFileRepository, temaFileRepository);
+        notaFileRepository = new NotaXMLRepo("fisiere/NoteTest.xml");
+
+        service = new Service(
+                studentFileRepository, studentValidator,
+                temaFileRepository ,temaValidator,
+                notaFileRepository, notaValidator
+        );
     }
 
     @After
@@ -344,5 +360,42 @@ public class ServiceTest {
         } catch (ValidationException e) {
             fail();
         }
+    }
+
+
+    // lab4
+
+    @Test
+    public void integrationStudent() {
+        Student student = new Student("222", "Raul Mogos", 935, "raul@raul.com");
+        studentValidator.validate(student);
+        assertTrue(true);
+        studentFileRepository.save(student);
+        assertTrue(true);
+    }
+
+    @Test
+    public void integrationAssignment() {
+        Tema tema = new Tema("111", "descriere", 6, 3);
+        service.addTema(tema);
+        assertTrue(true);
+    }
+
+    @Test
+    public void integrationGrade() {
+        Nota nota = new Nota("111", "222", "111", 5, LocalDate.of(2018, 10, 15));
+        service.addNota(nota, "Nice work!");
+        assertTrue(true);
+    }
+
+    @Test
+    public void integrationAll() {
+        Student student = new Student("222", "Raul Mogos", 935, "raul@raul.com");
+        service.addStudent(student);
+        Tema tema = new Tema("111", "descriere", 6, 3);
+        service.addTema(tema);
+        Nota nota = new Nota("111", "222", "111", 5, LocalDate.of(2018, 10, 15));
+        service.addNota(nota, "Nice work!");
+        assertTrue(true);
     }
 }
