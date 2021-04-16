@@ -398,4 +398,37 @@ public class ServiceTest {
         service.addNota(nota, "Nice work!");
         assertTrue(true);
     }
+
+    // lab 4 - homework
+    // Incremental
+
+    @Test
+    public void addStudentIncremental() {
+        Student student = new Student("222", "Raul Mogos", 935, "raul@raul.com");
+        studentValidator.validate(student);
+        assertTrue(true);
+        studentFileRepository.save(student);
+        assertTrue(true);
+    }
+
+    @Test
+    public void addStudentAddAssignmentIncremental() {
+        Student student = new Student("222", "Raul Mogos", 935, "raul@raul.com");
+        studentValidator.validate(student);
+        studentFileRepository.save(student);
+        Tema tema = new Tema("111", "descriere", 6, 3);
+        service.addTema(tema);
+        assertTrue(true);
+    }
+
+    @Test
+    public void incrementalAll() {
+        Student student = new Student("222", "Raul Mogos", 935, "raul@raul.com");
+        service.addStudent(student);
+        Tema tema = new Tema("111", "descriere", 6, 3);
+        service.addTema(tema);
+        Nota nota = new Nota("111", "222", "111", 5, LocalDate.of(2018, 10, 15));
+        service.addNota(nota, "Nice work!");
+        assertTrue(true);
+    }
 }
